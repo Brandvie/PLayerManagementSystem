@@ -1,4 +1,4 @@
-package org.example;
+package playermanagement;
 
 import static org.junit.Assert.assertTrue;
 
@@ -7,7 +7,7 @@ import org.junit.Test;
 /**
  * Unit test for simple App.
  */
-public class AppTest 
+public class PlayerManagementAppTest
 {
     /**
      * Rigorous Test :-)

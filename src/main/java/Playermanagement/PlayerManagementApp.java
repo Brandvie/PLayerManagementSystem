@@ -22,7 +22,8 @@ public class PlayerManagementApp {
             System.out.println("2. Find player by ID");
             System.out.println("3. Delete player by ID");
             System.out.println("4. Add new player");
-            System.out.println("5. Exit");
+            System.out.println("5. Update player");  // NEW OPTION
+            System.out.println("6. Exit");
             System.out.print("Enter your choice: ");
 
             if (scanner.hasNextInt()) {
@@ -43,6 +44,10 @@ public class PlayerManagementApp {
                         addNewPlayer();
                         break;
                     case 5:
+                        updatePlayer();
+                        break;
+
+                    case 6:
                         running = false;
                         break;
                     default:
@@ -119,5 +124,62 @@ public class PlayerManagementApp {
         PlayerDTO insertedPlayer = playerDAO.insertPlayer(newPlayer);
 
         System.out.println("New player added with ID: " + insertedPlayer.getId());
+    }
+
+    private static void updatePlayer() {
+        System.out.print("\nEnter player ID to update: ");
+        int id = scanner.nextInt();
+        scanner.nextLine();
+
+        PlayerDTO existingPlayer = playerDAO.getPlayerById(id);
+        if (existingPlayer == null) {
+            System.out.println("Player with ID " + id + " not found.");
+            return;
+        }
+
+        System.out.println("Current player details: " + existingPlayer);
+        System.out.println("\nEnter new details (leave blank to keep current value):");
+
+        System.out.print("Name (" + existingPlayer.getName() + "): ");
+        String name = scanner.nextLine();
+        name = name.isEmpty() ? existingPlayer.getName() : name;
+
+        System.out.print("Age (" + existingPlayer.getAge() + "): ");
+        String ageInput = scanner.nextLine();
+        int age = ageInput.isEmpty() ? existingPlayer.getAge() : Integer.parseInt(ageInput);
+
+        System.out.print("Height (" + existingPlayer.getHeight() + "): ");
+        String heightInput = scanner.nextLine();
+        double height = heightInput.isEmpty() ? existingPlayer.getHeight() : Double.parseDouble(heightInput);
+
+        System.out.print("Weight (" + existingPlayer.getWeight() + "): ");
+        String weightInput = scanner.nextLine();
+        double weight = weightInput.isEmpty() ? existingPlayer.getWeight() : Double.parseDouble(weightInput);
+
+        System.out.print("Position (" + existingPlayer.getPosition() + "): ");
+        String position = scanner.nextLine();
+        position = position.isEmpty() ? existingPlayer.getPosition() : position;
+
+        System.out.print("Team (" + existingPlayer.getTeam() + "): ");
+        String team = scanner.nextLine();
+        team = team.isEmpty() ? existingPlayer.getTeam() : team;
+
+        PlayerDTO updatedPlayer = new PlayerDTO(
+                id,
+                name,
+                age,
+                height,
+                weight,
+                position,
+                team
+        );
+
+        boolean success = playerDAO.updatePlayer(id, updatedPlayer);
+        if (success) {
+            System.out.println("Player updated successfully!");
+            System.out.println("Updated details: " + playerDAO.getPlayerById(id));
+        } else {
+            System.out.println("Failed to update player.");
+        }
     }
 }

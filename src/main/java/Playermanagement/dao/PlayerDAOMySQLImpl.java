@@ -121,4 +121,27 @@ public class PlayerDAOMySQLImpl implements PlayerDAO {
         }
         return player;
     }
+    @Override
+    public boolean updatePlayer(int id, PlayerDTO player) {
+        String sql = "UPDATE players SET name = ?, age = ?, height = ?, weight = ?, position = ?, team = ? WHERE id = ?";
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, player.getName());
+            pstmt.setInt(2, player.getAge());
+            pstmt.setDouble(3, player.getHeight());
+            pstmt.setDouble(4, player.getWeight());
+            pstmt.setString(5, player.getPosition());
+            pstmt.setString(6, player.getTeam());
+            pstmt.setInt(7, id);
+
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            System.err.println("Error updating player: " + e.getMessage());
+            return false;
+        }
+    }
 }
