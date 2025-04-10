@@ -3,10 +3,12 @@ package Playermanagement.dao;
 
 
 import Playermanagement.dto.PlayerDTO;
+import Playermanagement.filter.PlayerFilter;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PlayerDAOMySQLImpl implements PlayerDAO {
     private static final String URL = "jdbc:mysql://localhost:3306/player_db";
@@ -143,5 +145,12 @@ public class PlayerDAOMySQLImpl implements PlayerDAO {
             System.err.println("Error updating player: " + e.getMessage());
             return false;
         }
+    }
+    @Override
+    public List<PlayerDTO> findPlayersApplyFilter(PlayerFilter filter) {
+        List<PlayerDTO> allPlayers = getAllPlayers(); // Get all players first
+        return allPlayers.stream()
+                .filter(filter::test)
+                .collect(Collectors.toList());
     }
 }

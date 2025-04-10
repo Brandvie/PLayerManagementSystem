@@ -5,6 +5,9 @@ package Playermanagement;
 import Playermanagement.dao.PlayerDAO;
 import Playermanagement.dao.PlayerDAOMySQLImpl;
 import Playermanagement.dto.PlayerDTO;
+import Playermanagement.filter.PlayerFilter;
+import Playermanagement.filter.PlayerFilters;
+import Playermanagement.util.JsonConverter;
 
 import java.util.List;
 import java.util.Scanner;
@@ -20,11 +23,12 @@ public class PlayerManagementApp {
             System.out.println("\nPlayer Management System");
             System.out.println("1. List all players");
             System.out.println("2. Find player by ID");
-            System.out.println("3. Delete player by ID");
-            System.out.println("4. Add new player");
-            System.out.println("5. Update player");  // NEW OPTION
-            System.out.println("6. Exit");
-            System.out.print("Enter your choice: ");
+            System.out.println("3. Delete player");
+            System.out.println("4. Add player");
+            System.out.println("5. Update player");
+            System.out.println("6. Filter players");
+            System.out.println("7. JSON Options");
+            System.out.println("8. Exit");
 
             if (scanner.hasNextInt()) {
                 int choice = scanner.nextInt();
@@ -46,8 +50,13 @@ public class PlayerManagementApp {
                     case 5:
                         updatePlayer();
                         break;
-
                     case 6:
+                        filterPlayers();
+                        break;
+                    case 7:
+                    showJson();
+                    break;
+                   case 8:
                         running = false;
                         break;
                     default:
@@ -182,4 +191,76 @@ public class PlayerManagementApp {
             System.out.println("Failed to update player.");
         }
     }
+    private static void filterPlayers() {
+        System.out.println("\nFilter Players");
+        System.out.println("1. By minimum age");
+        System.out.println("2. By position");
+        System.out.println("3. By team");
+        System.out.println("4. By height range");
+        System.out.println("5. Combined filters");
+        System.out.print("Enter your choice: ");
+
+        int choice = scanner.nextInt();
+        scanner.nextLine(); // consume newline
+
+        PlayerFilter filter = null;
+
+        switch (choice) {
+            case 1:
+                System.out.print("Enter minimum age: ");
+                int age = scanner.nextInt();
+                filter = PlayerFilters.ageAtLeast(age);
+                break;
+            case 2:
+                System.out.print("Enter position: ");
+                String position = scanner.nextLine();
+                filter = PlayerFilters.positionEquals(position);
+                break;
+            case 3:
+                System.out.print("Enter team: ");
+                String team = scanner.nextLine();
+                filter = PlayerFilters.teamEquals(team);
+                break;
+            case 4:
+                System.out.print("Enter minimum height: ");
+                double minHeight = scanner.nextDouble();
+                System.out.print("Enter maximum height: ");
+                double maxHeight = scanner.nextDouble();
+                filter = PlayerFilters.heightBetween(minHeight, maxHeight);
+                break;
+            case 5:
+                System.out.println("Creating combined filter...");
+                // Example: Players over 25 on team "Lakers"
+                filter = PlayerFilters.and(
+                        PlayerFilters.ageAtLeast(25),
+                        PlayerFilters.teamEquals("Lakers")
+                );
+                break;
+            default:
+                System.out.println("Invalid choice");
+                return;
+        }
+
+        List<PlayerDTO> filteredPlayers = playerDAO.findPlayersApplyFilter(filter);
+        System.out.println("\nFiltered Players (" + filteredPlayers.size() + " found):");
+        filteredPlayers.forEach(System.out::println);
+    }
+
+
+    private static void showJson() {
+        // Get one player
+        PlayerDTO player = playerDAO.getPlayerById(1);
+        if (player != null) {
+            String playerJson = JsonConverter.playerToJson(player);
+            System.out.println("\nSingle Player JSON:");
+            System.out.println(playerJson);
+        }
+
+        // Get all players
+        List<PlayerDTO> players = playerDAO.getAllPlayers();
+        String allPlayersJson = JsonConverter.playersToJson(players);
+        System.out.println("\nAll Players JSON:");
+        System.out.println(allPlayersJson);
+    }
+
 }
