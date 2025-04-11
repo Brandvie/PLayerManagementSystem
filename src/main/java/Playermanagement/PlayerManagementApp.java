@@ -28,11 +28,12 @@ public class PlayerManagementApp {
             System.out.println("5. Update player");
             System.out.println("6. Filter players");
             System.out.println("7. JSON Options");
-            System.out.println("8. Exit");
+            System.out.println("8. Convert player to JSON");
+            System.out.println("9. Exit");
 
             if (scanner.hasNextInt()) {
                 int choice = scanner.nextInt();
-                scanner.nextLine(); // consume newline
+                scanner.nextLine();
 
                 switch (choice) {
                     case 1:
@@ -57,6 +58,9 @@ public class PlayerManagementApp {
                     showJson();
                     break;
                    case 8:
+                       convertPlayerToJson();
+                        break;
+                    case 9:
                         running = false;
                         break;
                     default:
@@ -201,7 +205,7 @@ public class PlayerManagementApp {
         System.out.print("Enter your choice: ");
 
         int choice = scanner.nextInt();
-        scanner.nextLine(); // consume newline
+        scanner.nextLine();
 
         PlayerFilter filter = null;
 
@@ -263,4 +267,21 @@ public class PlayerManagementApp {
         System.out.println(allPlayersJson);
     }
 
+    private static void convertPlayerToJson() {
+        System.out.print("\nEnter player ID to convert to JSON: ");
+        int id = scanner.nextInt();
+        scanner.nextLine();
+
+        PlayerDTO player = playerDAO.getPlayerById(id);
+        if (player != null) {
+            String json = player.toJson();
+            System.out.println("\nPlayer JSON:");
+            System.out.println(json);
+        } else {
+            System.out.println("Player with ID " + id + " not found.");
+        }
+
+        System.out.println("\nPress Enter to continue...");
+        scanner.nextLine();
+    }
 }
