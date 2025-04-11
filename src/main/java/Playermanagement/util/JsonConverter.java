@@ -1,10 +1,12 @@
 package Playermanagement.util;
 
 import Playermanagement.dto.PlayerDTO;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 
 public class JsonConverter {
-
+    private static final ObjectMapper objectMapper = new ObjectMapper();
     // Feature 7: Convert list of players to JSON
     public static String playersToJson(List<PlayerDTO> players) {
         StringBuilder json = new StringBuilder("[");
@@ -30,5 +32,14 @@ public class JsonConverter {
                 player.getPosition(),
                 player.getTeam()
         );
+    }
+    public static PlayerDTO jsonToPlayer(String json) {
+        try {
+            //found this on stackoverflow.com
+            return objectMapper.readValue(json, PlayerDTO.class);
+        } catch (JsonProcessingException e) {
+            System.err.println("Error parsing JSON: " + e.getMessage());
+            return null;
+        }
     }
 }
