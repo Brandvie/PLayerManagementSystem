@@ -84,6 +84,7 @@ public class PlayerDAOMySQLImpl implements PlayerDAO {
         return rowDeleted;
     }
 
+
     @Override
     public PlayerDTO insertPlayer(PlayerDTO player) {
         String sql = "INSERT INTO players (name, age, height, weight, position, team) VALUES (?, ?, ?, ?, ?, ?)";
