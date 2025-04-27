@@ -14,4 +14,5 @@ public interface PlayerDAO {
     PlayerDTO insertPlayer(PlayerDTO player);
     boolean updatePlayer(int id, PlayerDTO player);
     List<PlayerDTO> findPlayersApplyFilter(PlayerFilter filter);
+
 }

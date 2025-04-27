@@ -12,10 +12,19 @@ public class PlayerDTO {
     private String team;
 
     // Constructors
-    public PlayerDTO() {}
+    public PlayerDTO(int i, String name, int age, float rating) {}
 
     public PlayerDTO(int id, String name, int age, double height, double weight, String position, String team) {
         this.id = id;
+        this.name = name;
+        this.age = age;
+        this.height = height;
+        this.weight = weight;
+        this.position = position;
+        this.team = team;
+    }
+
+    public PlayerDTO() {
         this.name = name;
         this.age = age;
         this.height = height;

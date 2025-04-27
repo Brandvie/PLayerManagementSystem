@@ -33,12 +33,20 @@ public class JsonConverter {
                 player.getTeam()
         );
     }
+//    public static PlayerDTO jsonToPlayer(String json) {
+//        try {
+//            //found this on stackoverflow.com
+//            return objectMapper.readValue(json, PlayerDTO.class);
+//        } catch (JsonProcessingException e) {
+//            System.err.println("Error parsing JSON: " + e.getMessage());
+//            return null;
+//        }
+//    }
     public static PlayerDTO jsonToPlayer(String json) {
         try {
-            //found this on stackoverflow.com
             return objectMapper.readValue(json, PlayerDTO.class);
         } catch (JsonProcessingException e) {
-            System.err.println("Error parsing JSON: " + e.getMessage());
+            System.err.println("Error parsing JSON to Player: " + e.getMessage());
             return null;
         }
     }
